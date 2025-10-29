@@ -1,41 +1,49 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../domain/entities/booking_entity.dart';
 
-class BookingModel extends BookingEntity {
-  const BookingModel({
+class BookingModel extends Booking {
+  BookingModel({
     required super.id,
-    required super.roomId,
     required super.userId,
-    required super.checkInDate,
-    required super.checkOutDate,
-    required super.note,
-    required super.roomName,
+    required super.roomId,
+    required super.roomType,
+    required super.roomNumber,
     required super.price,
+    required super.name,
+    required super.phone,
+    required super.payment,
+    required super.createdAt,
   });
 
   factory BookingModel.fromMap(Map<String, dynamic> map, String id) {
     return BookingModel(
       id: id,
-      roomId: map['roomId'] ?? '',
       userId: map['userId'] ?? '',
-      checkInDate: (map['checkInDate'] as Timestamp).toDate(),
-      checkOutDate: (map['checkOutDate'] as Timestamp).toDate(),
-      note: map['note'] ?? '',
-      roomName: map['roomName'] ?? '',
+      roomId: map['roomId'] ?? '',
+      roomType: map['roomType'] ?? '',
+      roomNumber: map['roomNumber'] ?? '',
       price: (map['price'] ?? 0).toDouble(),
+      name: map['name'] ?? '',
+      phone: map['phone'] ?? '',
+      payment: map['payment'] ?? '',
+      createdAt: (map['createdAt'] is Timestamp)
+          ? (map['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'roomId': roomId,
       'userId': userId,
-      'checkInDate': checkInDate,
-      'checkOutDate': checkOutDate,
-      'note': note,
-      'roomName': roomName,
+      'roomId': roomId,
+      'roomType': roomType,
+      'roomNumber': roomNumber,
       'price': price,
+      'name': name,
+      'phone': phone,
+      'payment': payment,
+      'createdAt': FieldValue.serverTimestamp(), // Đảm bảo đúng kiểu
     };
   }
 }
+
