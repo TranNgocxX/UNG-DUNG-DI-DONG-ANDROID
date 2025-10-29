@@ -18,7 +18,7 @@ class ProfilePage extends StatelessWidget {
         children: [
           const SizedBox(height: 20),
 
-          // 👤 Thông tin cơ bản của người dùng
+          // 
           ListTile(
             leading: const CircleAvatar(
               radius: 26,
@@ -31,7 +31,7 @@ class ProfilePage extends StatelessWidget {
 
           const Divider(),
 
-          // 🧾 Tài khoản của tôi
+          // 
           ListTile(
             leading: const Icon(Icons.account_circle_outlined),
             title: const Text('Tài khoản của tôi'),
@@ -41,7 +41,7 @@ class ProfilePage extends StatelessWidget {
             },
           ),
 
-          // 📅 Lịch sử đặt phòng
+          // 
           ListTile(
             leading: const Icon(Icons.history),
             title: const Text('Lịch sử đặt phòng'),
@@ -53,7 +53,7 @@ class ProfilePage extends StatelessWidget {
 
           const Divider(),
 
-          // 🚪 Đăng xuất
+          // 
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text('Đăng xuất', style: TextStyle(color: Colors.red)),
