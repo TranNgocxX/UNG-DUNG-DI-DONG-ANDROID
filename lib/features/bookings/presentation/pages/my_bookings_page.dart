@@ -1,49 +1,59 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../providers/bookings_provider.dart';
 
-class MyBookingsPage extends ConsumerWidget {
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../data/models/booking_model.dart';
+import '../widgets/booking_card.dart';
+
+class MyBookingsPage extends StatelessWidget {
   const MyBookingsPage({super.key});
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Stream<List<BookingModel>> _bookingsStream() {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      return const Scaffold(body: Center(child: Text('Vui lòng đăng nhập')));
-    }
+    if (user == null) return const Stream.empty();
 
-    final bookingsState = ref.watch(bookingsProvider);
+    return FirebaseFirestore.instance
+        .collection('bookings')
+        .where('userId', isEqualTo: user.uid)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => BookingModel.fromMap(doc.data(), doc.id)).toList());
+  }
 
-    ref.read(bookingsProvider.notifier).loadMyBookings(user.uid);
-
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Phòng đã đặt')),
-      body: bookingsState.when(
-        data: (bookings) => ListView.builder(
-          itemCount: bookings.length,
-          itemBuilder: (context, index) {
-            final b = bookings[index];
-            return Card(
-              margin: const EdgeInsets.all(8),
-              child: ListTile(
-                title: Text(b.roomName),
-                subtitle: Text(
-                    'Nhận: ${b.checkInDate.toString().split(" ")[0]}  -  Trả: ${b.checkOutDate.toString().split(" ")[0]}'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.cancel, color: Colors.red),
-                  onPressed: () async {
-                    await ref
-                        .read(bookingsProvider.notifier)
-                        .removeBooking(b.id, user.uid);
-                  },
-                ),
+      appBar: AppBar(
+        title: const Text('Phòng đã đặt'),
+        //backgroundColor: const Color.fromARGB(255, 173, 107, 184),
+        backgroundColor: const Color(0xFFBDCFFF),
+        centerTitle: true,
+      ),
+      body: StreamBuilder<List<BookingModel>>(
+        stream: _bookingsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final bookings = snapshot.data ?? [];
+          if (bookings.isEmpty) {
+            return const Center(
+              child: Text(
+                'Bạn chưa đặt phòng nào!',
+                style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
             );
-          },
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Lỗi: $e')),
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: bookings.length,
+            itemBuilder: (context, index) {
+              return BookingCard(booking: bookings[index]);
+            },
+          );
+        },
       ),
     );
   }
