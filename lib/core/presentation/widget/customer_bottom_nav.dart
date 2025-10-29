@@ -64,7 +64,6 @@ class _CustomerBottomNavState extends State<CustomerBottomNav> {
         context.go(AppRoutes.home);
         break;
       case 1:
-        // Giỏ hàng / danh sách đặt phòng
         context.go(AppRoutes.myBookings);
         break;
       case 2:
