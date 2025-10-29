@@ -8,27 +8,44 @@ import 'package:ngoctran/features/auth/presentation/pages/signup_page.dart';
 import 'package:ngoctran/features/home/presentation/pages/home_page.dart';
 import 'package:ngoctran/features/bookings/presentation/pages/my_bookings_page.dart';
 import 'package:ngoctran/features/profile/presentation/pages/profile_page.dart';
+import 'package:ngoctran/features/profile/presentation/pages/account_detail_page.dart';
+import 'package:ngoctran/features/rooms/presentation/pages/room_management_page.dart';
+import 'package:ngoctran/features/rooms/presentation/pages/room_detail_page.dart';
+import 'package:ngoctran/features/rooms/data/models/room_model.dart';
+import 'package:ngoctran/features/bookings/presentation/pages/booking_page.dart';
+
 import 'go_router_refresh_change.dart';
+
 
 class AppGoRouter {
   static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.login,
     debugLogDiagnostics: true,
-
     routes: [
-      // Đăng nhập
       GoRoute(
         path: AppRoutes.login,
         builder: (context, state) => const LoginPage(),
       ),
-
-      // Đăng ký
       GoRoute(
         path: AppRoutes.signup,
         builder: (context, state) => const SignupPage(),
       ),
 
-      // Khu vực chính có Bottom Navigation
+      GoRoute(
+        path: AppRoutes.booking,
+        builder: (context, state) {
+          final room = state.extra as RoomModel?;
+          if (room == null) {
+            return const Scaffold(
+              body: Center(
+                child: Text('❌ Không tìm thấy thông tin phòng.'),
+              ),
+            );
+          }
+          return BookingPage(room: room);
+        },
+      ),
+
       ShellRoute(
         builder: (context, state, child) {
           final int currentIndex = _getIndexForLocation(state.matchedLocation);
@@ -38,39 +55,43 @@ class AppGoRouter {
           );
         },
         routes: [
-          // 🏠 Trang chủ
           GoRoute(
             path: AppRoutes.home,
             builder: (context, state) => const HomePage(),
           ),
-
-          // 🛏️ Danh sách đặt phòng
           GoRoute(
             path: AppRoutes.myBookings,
             builder: (context, state) => const MyBookingsPage(),
           ),
-
-          // 👤 Hồ sơ cá nhân
           GoRoute(
             path: AppRoutes.profile,
             builder: (context, state) => const ProfilePage(),
           ),
-
-          // 🧾 Trang chi tiết tài khoản
           GoRoute(
             path: AppRoutes.accountDetail,
-            builder: (context, state) => Scaffold(
-              appBar: AppBar(title: const Text('Thông tin tài khoản')),
-              body: const Center(
-                child: Text('Trang chi tiết tài khoản của bạn.'),
-              ),
-            ),
+            builder: (context, state) => const AccountDetailPage(),
+          ),
+
+          GoRoute(
+            path: AppRoutes.roomManagement,
+            builder: (context, state) => const RoomManagementPage(),
+          ),
+          GoRoute(
+            path: '${AppRoutes.roomDetail}/:id',
+            builder: (context, state) {
+              final room = state.extra as RoomModel?;
+              if (room == null) {
+                return const Scaffold(
+                  body: Center(child: Text('Không tìm thấy thông tin phòng.')),
+                );
+              }
+              return RoomDetailPage(room: room);
+            },
           ),
         ],
       ),
     ],
 
-    // 🔐 Điều hướng khi đăng nhập / đăng xuất
     redirect: (context, state) {
       final user = FirebaseAuth.instance.currentUser;
       final loggedIn = user != null;
@@ -86,7 +107,6 @@ class AppGoRouter {
         GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
   );
 
-  // 🔹 Xác định index hiện tại cho thanh điều hướng
   static int _getIndexForLocation(String path) {
     if (path.startsWith(AppRoutes.home)) return 0;
     if (path.startsWith(AppRoutes.myBookings)) return 1;
