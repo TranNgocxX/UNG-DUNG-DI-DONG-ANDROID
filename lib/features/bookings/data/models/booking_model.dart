@@ -42,7 +42,7 @@ class BookingModel extends Booking {
       'name': name,
       'phone': phone,
       'payment': payment,
-      'createdAt': FieldValue.serverTimestamp(), // Đảm bảo đúng kiểu
+      'createdAt': FieldValue.serverTimestamp(), 
     };
   }
 }
