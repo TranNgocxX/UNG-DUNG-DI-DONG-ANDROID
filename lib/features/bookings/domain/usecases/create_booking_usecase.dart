@@ -1,10 +1,11 @@
 import '../entities/booking_entity.dart';
 import '../repositories/booking_repository.dart';
 
-class CreateBookingUseCase {
+class CreateBooking {
   final BookingRepository repository;
+  CreateBooking(this.repository);
 
-  CreateBookingUseCase(this.repository);
-
-  Future<void> call(BookingEntity booking) => repository.createBooking(booking);
+  Future<void> call(Booking booking) async {
+    return await repository.createBooking(booking);
+  }
 }
