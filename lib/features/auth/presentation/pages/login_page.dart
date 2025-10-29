@@ -1,4 +1,3 @@
-// 🟣 LOGIN PAGE - phiên bản khung trắng, ảnh full fit không cắt xén
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,7 +27,6 @@ class _LoginPage extends ConsumerState<LoginPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ✅ Header trắng + ảnh full fit, bo tròn cạnh dưới
             ClipRRect(
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(100),
