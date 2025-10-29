@@ -1,28 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/booking_model.dart';
 
-class BookingFirebaseDataSource {
-  final FirebaseFirestore firestore;
-
-  BookingFirebaseDataSource(this.firestore);
+class BookingRemoteDataSource {
+  final _firestore = FirebaseFirestore.instance;
 
   Future<void> createBooking(BookingModel booking) async {
-    await firestore.collection('bookings').add(booking.toMap());
+    await _firestore.collection('bookings').add(booking.toMap());
   }
 
-  Future<void> cancelBooking(String bookingId) async {
-    await firestore.collection('bookings').doc(bookingId).delete();
-  }
-
-  Future<List<BookingModel>> getMyBookings(String userId) async {
-    final snapshot = await firestore
+  Stream<List<BookingModel>> getBookingsByUserStream(String userId) {
+    return _firestore
         .collection('bookings')
         .where('userId', isEqualTo: userId)
-        .get();
-
-    return snapshot.docs
-        .map((doc) =>
-            BookingModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
-        .toList();
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => BookingModel.fromMap(doc.data(), doc.id)).toList());
   }
 }
