@@ -1,33 +1,25 @@
 import '../../domain/entities/booking_entity.dart';
 import '../../domain/repositories/booking_repository.dart';
-import '../datasources/booking_firebase_data_source.dart';
-import '../models/booking_model.dart';
+import '../../data/datasources/booking_remote_datasource.dart';
+import '../../data/models/booking_model.dart';
 
-class BookingRepositoryImpl extends BookingRepository {
-  final BookingFirebaseDataSource dataSource;
+class BookingRepositoryImpl implements BookingRepository {
+  final BookingRemoteDataSource remoteDataSource;
 
-  BookingRepositoryImpl(this.dataSource);
+  BookingRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<void> createBooking(BookingEntity booking) {
-    final model = BookingModel(
-      id: booking.id,
-      roomId: booking.roomId,
-      userId: booking.userId,
-      checkInDate: booking.checkInDate,
-      checkOutDate: booking.checkOutDate,
-      note: booking.note,
-      roomName: booking.roomName,
-      price: booking.price,
-    );
-    return dataSource.createBooking(model);
+  Future<void> createBooking(Booking booking) async {
+    await remoteDataSource.createBooking(booking as BookingModel);
   }
 
-  @override
-  Future<void> cancelBooking(String bookingId) =>
-      dataSource.cancelBooking(bookingId);
+  // ⚠️ Chuyển từ Future sang Stream cho đồng nhất với datasource
+  Stream<List<Booking>> getBookingsByUserStream(String userId) {
+    return remoteDataSource.getBookingsByUserStream(userId);
+  }
 
-  @override
-  Future<List<BookingEntity>> getMyBookings(String userId) =>
-      dataSource.getMyBookings(userId);
+  // Nếu interface BookingRepository chỉ định dùng Future<List<Booking>>,
+  // bạn có thể để trống hoặc comment dòng này:
+  // @override
+  // Future<List<Booking>> getBookingsByUser(String userId) async => [];
 }
