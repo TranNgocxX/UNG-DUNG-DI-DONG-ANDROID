@@ -29,7 +29,6 @@ class _SignupPageState extends State<SignupPage> {
         password: passCtrl.text.trim(),
       );
       setState(() => error = null);
-      // Sau khi đăng ký thành công có thể chuyển sang trang chính hoặc đăng nhập
     } on FirebaseAuthException catch (e) {
       setState(() => error = e.message);
     }
@@ -44,7 +43,6 @@ class _SignupPageState extends State<SignupPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 🟣 Header có ảnh full khung
             ClipRRect(
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(100),
@@ -56,7 +54,7 @@ class _SignupPageState extends State<SignupPage> {
                 color: Colors.white,
                 child: Image.asset(
                   "assets/images/img2.png",
-                  fit: BoxFit.fill, // ✅ Ảnh co giãn full khung, không bị cắt
+                  fit: BoxFit.fill, 
                   width: double.infinity,
                   height: double.infinity,
                 ),
@@ -107,7 +105,6 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                       ),
 
-                    // Email
                     TextField(
                       controller: emailCtrl,
                       decoration: InputDecoration(
@@ -124,7 +121,6 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 14),
 
-                    // Mật khẩu
                     TextField(
                       controller: passCtrl,
                       obscureText: _obscurePass,
@@ -152,7 +148,6 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 14),
 
-                    // Xác nhận mật khẩu
                     TextField(
                       controller: confirmCtrl,
                       obscureText: _obscureConfirm,
@@ -193,7 +188,6 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 10),
 
-                    // Nút đăng ký
                     SizedBox(
                       width: double.infinity,
                       height: 52,
@@ -232,7 +226,6 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Biểu tượng mạng xã hội
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
