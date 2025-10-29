@@ -12,14 +12,7 @@ class BookingRepositoryImpl implements BookingRepository {
   Future<void> createBooking(Booking booking) async {
     await remoteDataSource.createBooking(booking as BookingModel);
   }
-
-  // ⚠️ Chuyển từ Future sang Stream cho đồng nhất với datasource
   Stream<List<Booking>> getBookingsByUserStream(String userId) {
     return remoteDataSource.getBookingsByUserStream(userId);
   }
-
-  // Nếu interface BookingRepository chỉ định dùng Future<List<Booking>>,
-  // bạn có thể để trống hoặc comment dòng này:
-  // @override
-  // Future<List<Booking>> getBookingsByUser(String userId) async => [];
 }
