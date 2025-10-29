@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
+            // Thanh tìm kiếm + lọc
             Row(
               children: [
                 Expanded(
@@ -176,6 +178,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // hiển thị phòng
   Widget _buildRoomCard(BuildContext context, RoomModel room) {
     return GestureDetector(
       onTap: () => context.push('${AppRoutes.roomDetail}/${room.id}', extra: room),
@@ -196,7 +199,6 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Ảnh phòng
             Stack(
               children: [
                 ClipRRect(
@@ -214,7 +216,7 @@ class _HomePageState extends State<HomePage> {
                   top: 8,
                   child: InkWell(
                     onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Đã thêm vào danh sách yêu thích 💖')),
+                      const SnackBar(content: Text('Đã thêm vào danh sách yêu thích ')),
                     ),
                     child: Container(
                       padding: const EdgeInsets.all(6),
