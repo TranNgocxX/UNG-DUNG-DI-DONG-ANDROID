@@ -26,7 +26,6 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
   Future<void> _loadUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Tải dữ liệu từ Firebase Auth
       _nameController.text = user.displayName ?? '';
       _phoneController.text = user.phoneNumber ?? '';
       _photoUrl = user.photoURL;
@@ -44,7 +43,6 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
 
     try {
       await user.updateDisplayName(_nameController.text);
-      // nếu bạn có lưu số điện thoại / avatar vào Firestore
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'name': _nameController.text,
         'phone': _phoneController.text,
@@ -100,7 +98,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                             right: 0,
                             child: GestureDetector(
                               onTap: () {
-                                // TODO: Thêm logic chọn ảnh mới
+                                
                               },
                               child: CircleAvatar(
                                 radius: 16,
