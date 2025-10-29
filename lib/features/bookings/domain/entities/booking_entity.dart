@@ -1,27 +1,25 @@
-import 'package:equatable/equatable.dart';
-
-class BookingEntity extends Equatable {
+class Booking {
   final String id;
-  final String roomId;
   final String userId;
-  final DateTime checkInDate;
-  final DateTime checkOutDate;
-  final String note;
-  final String roomName;
+  final String roomId;
+  final String roomType;
+  final String roomNumber;
   final double price;
+  final String name;
+  final String phone;
+  final String payment;
+  final DateTime createdAt;
 
-  const BookingEntity({
+  Booking({
     required this.id,
-    required this.roomId,
     required this.userId,
-    required this.checkInDate,
-    required this.checkOutDate,
-    required this.note,
-    required this.roomName,
+    required this.roomId,
+    required this.roomType,
+    required this.roomNumber,
     required this.price,
+    required this.name,
+    required this.phone,
+    required this.payment,
+    required this.createdAt,
   });
-
-  @override
-  List<Object?> get props =>
-      [id, roomId, userId, checkInDate, checkOutDate, note, roomName, price];
 }
