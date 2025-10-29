@@ -175,7 +175,6 @@ class RoomDetailPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 40),
 
-                          // ✅ Nút ĐẶT PHÒNG — ĐÃ SỬA
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
@@ -214,7 +213,7 @@ class RoomDetailPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: const Text(
-                        'Có thể bạn sẽ thích ✨',
+                        'Có thể bạn sẽ thích ',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
