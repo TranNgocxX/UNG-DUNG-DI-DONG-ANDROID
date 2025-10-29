@@ -1,7 +1,6 @@
 import '../entities/booking_entity.dart';
 
 abstract class BookingRepository {
-  Future<void> createBooking(BookingEntity booking);
-  Future<void> cancelBooking(String bookingId);
-  Future<List<BookingEntity>> getMyBookings(String userId);
+  Future<void> createBooking(Booking booking);
+  Stream<List<Booking>> getBookingsByUserStream(String userId);
 }
