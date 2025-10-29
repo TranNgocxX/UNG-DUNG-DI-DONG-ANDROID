@@ -14,10 +14,10 @@ class CustomerBottomNav extends StatefulWidget {
 class _CustomerBottomNavState extends State<CustomerBottomNav> {
   late int currentIndex;
 
-  // 🏠 Trang chủ | 💳 Đặt phòng | 👤 Hồ sơ
+  // Trang chủ | Đặt phòng | Hồ sơ
   final List<IconData> _icons = [
     Icons.home,
-    Icons.shopping_cart, // giỏ hàng / phòng đã đặt
+    Icons.shopping_cart,
     Icons.person,
   ];
 
