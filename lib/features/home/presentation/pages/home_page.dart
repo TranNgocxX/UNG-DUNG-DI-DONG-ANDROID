@@ -29,7 +29,6 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 👋 Chào mừng người dùng
             Text(
               'Xin chào, ${user?.email ?? 'Khách'} 👋',
               style: const TextStyle(
@@ -39,7 +38,6 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // 🏨 Danh sách chức năng chính
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
