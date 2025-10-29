@@ -1,25 +1,44 @@
 import '../../domain/entities/room_entity.dart';
 import '../../domain/repositories/room_repository.dart';
-import '../datasources/room_firebase_data_source.dart';
+import '../datasources/room_remote_datasource.dart';
+import '../models/room_model.dart';
 
-class RoomRepositoryImpl extends RoomRepository {
-  final RoomFirebaseDataSource dataSource;
+class RoomRepositoryImpl implements RoomRepository {
+  final RoomRemoteDataSource remoteDataSource;
 
-  RoomRepositoryImpl(this.dataSource);
-
-  @override
-  Future<List<RoomEntity>> getRooms() => dataSource.getRooms();
+  RoomRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<List<RoomEntity>> filterRooms({
-    String? type,
-    double? minPrice,
-    double? maxPrice,
-    bool? available,
-  }) => dataSource.filterRooms(
-        type: type,
-        minPrice: minPrice,
-        maxPrice: maxPrice,
-        available: available,
-      );
+  Stream<List<Room>> getRoomsStream() => remoteDataSource.getRoomsStream();
+
+  @override
+  Future<void> addRoom(Room room) async {
+    await remoteDataSource.addRoom(RoomModel(
+      id: room.id,
+      soPhong: room.soPhong,
+      tang: room.tang,
+      loaiPhong: room.loaiPhong,
+      giaDem: room.giaDem,
+      tinhTrang: room.tinhTrang,
+      anhPhong: room.anhPhong,
+      moTa: room.moTa,
+    ));
+  }
+
+  @override
+  Future<void> updateRoom(Room room) async {
+    await remoteDataSource.updateRoom(RoomModel(
+      id: room.id,
+      soPhong: room.soPhong,
+      tang: room.tang,
+      loaiPhong: room.loaiPhong,
+      giaDem: room.giaDem,
+      tinhTrang: room.tinhTrang,
+      anhPhong: room.anhPhong,
+      moTa: room.moTa,
+    ));
+  }
+
+  @override
+  Future<void> deleteRoom(String id) => remoteDataSource.deleteRoom(id);
 }
