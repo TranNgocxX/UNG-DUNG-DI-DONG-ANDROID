@@ -32,24 +32,38 @@ class _BookingPageState extends State<BookingPage> {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    if (picked != null) setState(() => _checkInDate = picked);
+    if (picked != null) {
+      setState(() {
+        _checkInDate = picked;
+        if (_checkOutDate != null && _checkOutDate!.isBefore(picked)) {
+          _checkOutDate = null;
+        }
+      });
+    }
   }
 
   Future<void> _pickCheckOutDate() async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: _checkOutDate ?? DateTime.now(),
-      firstDate: DateTime.now(),
+      initialDate: _checkOutDate ?? (_checkInDate ?? DateTime.now()),
+      firstDate: _checkInDate ?? DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
     if (picked != null) setState(() => _checkOutDate = picked);
   }
 
+  double _calculateTotal() {
+    if (_checkInDate == null || _checkOutDate == null) return 0;
+    final days = _checkOutDate!.difference(_checkInDate!).inDays;
+    final totalDays = days > 0 ? days : 1;
+    return totalDays * widget.room.giaDem;
+  }
+
   Future<void> _bookRoom() async {
     if (!_formKey.currentState!.validate()) return;
-    if (_checkInDate == null) {
+    if (_checkInDate == null || _checkOutDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng chọn ngày check-in')),
+        const SnackBar(content: Text('Vui lòng chọn ngày check-in và check-out')),
       );
       return;
     }
@@ -62,6 +76,8 @@ class _BookingPageState extends State<BookingPage> {
       return;
     }
 
+    final total = _calculateTotal();
+
     setState(() => _loading = true);
 
     try {
@@ -71,6 +87,7 @@ class _BookingPageState extends State<BookingPage> {
         'roomType': widget.room.loaiPhong,
         'roomNumber': widget.room.soPhong,
         'price': widget.room.giaDem,
+        'total': total,
         'name': _nameController.text,
         'phone': _phoneController.text,
         'email': _emailController.text,
@@ -88,7 +105,7 @@ class _BookingPageState extends State<BookingPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('🎉 Đặt phòng thành công!'),
+          content: Text('Đặt phòng thành công!'),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
           duration: Duration(seconds: 2),
@@ -112,6 +129,8 @@ class _BookingPageState extends State<BookingPage> {
         body: Center(child: Text('Không tìm thấy thông tin phòng')),
       );
     }
+
+    final total = _calculateTotal();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F4FF),
@@ -235,6 +254,43 @@ class _BookingPageState extends State<BookingPage> {
                       ],
                     ),
                     const SizedBox(height: 16),
+                    if (total > 0)
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Tổng tiền cần thanh toán:',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            Text(
+                              '${total.toStringAsFixed(0)} VNĐ',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.purple,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 16),
                     TextFormField(
                       controller: _peopleController,
                       decoration:
@@ -291,7 +347,6 @@ class _BookingPageState extends State<BookingPage> {
                     ),
                     const SizedBox(height: 16),
 
-                    // 💰 Thanh toán
                     DropdownButtonFormField<String>(
                       value: _payment,
                       decoration:
